@@ -1,0 +1,531 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: 
+        linear-gradient(135deg, rgba(14, 170, 22, 0.65) 0%, rgba(29, 184, 35, 0.65) 100%),
+        url('/static/wp2661490.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+/* Barre de navigation */
+nav {
+    background: linear-gradient(90deg, #0eaa16 0%, #1db823 100%);
+    padding: 0 30px;
+    height: 55px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffee06;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffee06;
+}
+
+.btn-login {
+    background: linear-gradient(135deg, #ffee06 0%, #ffd700 100%);
+    color: #0eaa16;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 238, 6, 0.4);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+/* Contenu principal */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px;
+}
+
+/* Styles pour les messages Flash */
+.alerts {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 400px;
+    z-index: 1000;
+}
+
+.alert {
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.alert-info {
+    background-color: #ffee06;
+    color: #0eaa16;
+    border: 2px solid #0eaa16;
+}
+
+/* Container principal - Format PC */
+.auth-container {
+    display: flex;
+    width: 100%;
+    max-width: 1000px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    padding: 40px 30px;
+}
+
+/* Panel gauche - Bienvenue */
+.auth-panel-left {
+    flex: 1;
+    background: linear-gradient(135deg, #0eaa16 0%, #1db823 100%);
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.auth-panel-left h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #ffee06;
+}
+
+.auth-panel-left p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    background-color: #ffee06;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+/* Panel droit - Formulaire */
+.auth-panel-right {
+    flex: 1;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: #999;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+}
+
+.auth-tab.active {
+    color: #0eaa16;
+    border-bottom-color: #0eaa16;
+}
+
+.auth-tab:hover {
+    color: #0eaa16;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #0eaa16;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0eaa16;
+    box-shadow: 0 0 8px rgba(14, 170, 22, 0.2);
+}
+
+.form-group input::placeholder {
+    color: #ccc;
+}
+
+/* Styles pour la photo de profil */
+.profile-photo-section {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-photo-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: 3px dashed #0eaa16;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px;
+    overflow: hidden;
+    font-size: 50px;
+    color: #ddd;
+}
+
+.profile-photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-photo-input {
+    display: none;
+}
+
+.profile-photo-label {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffee06 0%, #ffd700 100%);
+    color: #0eaa16;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.profile-photo-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 238, 6, 0.4);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #0eaa16 0%, #1db823 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14, 170, 22, 0.3);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.form-footer a {
+    color: #0eaa16;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+    }
+    
+    .auth-panel-left {
+        padding: 40px 30px;
+    }
+    
+    .auth-panel-right {
+        padding: 40px 30px;
+    }
+    
+    .auth-panel-left h2 {
+        font-size: 24px;
+    }
+    
+    .alerts {
+        max-width: 90%;
+        right: 5%;
+        left: 5%;
+    }
+}
+
+/* Dashboard / Layout utilities */
+.dashboard-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 24px auto;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 0 20px;
+}
+
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+}
+
+.content-area {
+    flex: 1;
+}
+
+.card {
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+.profile-compact {
+    text-align: center;
+}
+
+.profile-compact img, .profile-compact .avatar-placeholder {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+}
+
+.quick-actions {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-actions a, .quick-actions button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-next {
+    background: linear-gradient(135deg, #0eaa16 0%, #1db823 100%);
+    color: white;
+}
+
+.btn-prev {
+    background: transparent;
+    color: #0eaa16;
+    border: 2px solid #0eaa16;
+}
+
+.btn-danger {
+    background: #ff6b6b;
+    color: #fff;
+}
+
+.tontine-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.tontine-meta {
+    color: #666;
+    margin-top: 6px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #ffecb3;
+    color: #8a6d00;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-wrapper { flex-direction: column; padding: 0 12px; }
+    .sidebar { width: 100%; position: relative; top: 0; }
+}
+
+/* Multi-step form (tontines) */
+.tontine-container {
+    max-width: 900px;
+    margin: 24px auto;
+    background: rgba(255,255,255,0.98);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+.tontine-header h1 { margin-bottom: 6px; color: #0eaa16; }
+.tontine-header p { color: #666; margin-bottom: 12px; }
+
+.progress-labels { display:flex; justify-content:space-between; margin-top:6px; color:#777; font-weight:600; font-size:14px; }
+.progress-bar { height:8px; background:#eee; border-radius:999px; display:flex; gap:8px; margin:10px 0 18px; padding:4px; }
+.progress-step { flex:1; background:transparent; border-radius:999px; }
+.progress-step.completed { background: linear-gradient(90deg,#c8f5ce 0%, #8ef08f 100%); }
+.progress-step.active { background: linear-gradient(90deg,#0eaa16 0%, #1db823 100%); box-shadow:0 6px 20px rgba(14,170,22,0.15); }
+
+.tontine-form .form-section { display:none; }
+.tontine-form .form-section.active { display:block; }
+.tontine-form h2 { color:#0eaa16; margin-bottom:10px; }
+.form-group label { color:#0eaa16; font-weight:700; }
+.form-group textarea { min-height:100px; padding:10px; }
+
+.tontine-summary { margin-top:14px; background:#f8fdf8; border:1px solid #e8f6e8; padding:12px; border-radius:8px; }
+.summary-item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #e8f6e8; }
+.summary-item:last-child { border-bottom:none; }
+.summary-label { color:#666; }
+.summary-value { color:#0eaa16; font-weight:700; }
+
+.button-group { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+.btn-submit { min-width:150px; }
+
+/* Tontines listing */
+.tontines-list { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:18px; margin-top:14px; }
+.tontine-card { background:#fff; padding:16px; border-radius:12px; box-shadow:0 8px 26px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:10px; }
+.tontine-card h3 { margin:0; color:#333; }
+.tontine-info { display:flex; gap:8px; flex-wrap:wrap; }
+.info-badge { background:#f1f8f1; color:#0eaa16; padding:6px 10px; border-radius:8px; font-weight:700; }
+.tontine-actions { display:flex; gap:8px; margin-top:8px; }
+.btn-join { background: linear-gradient(135deg, #0eaa16 0%, #1db823 100%); color:#fff; padding:8px 12px; border-radius:8px; border:none; font-weight:700; cursor:pointer; }
+.btn-view { background:transparent; color:#0eaa16; border:2px solid #0eaa16; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:700; }
+.btn-join[disabled] { opacity:0.5; cursor:not-allowed; }
+
+.header-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.header-actions a { text-decoration:none; color:#0eaa16; font-weight:700; }
+
+.empty-state { text-align:center; padding:28px; background:#fff; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.04); }
+
+@media (max-width:600px) {
+    .tontine-container { padding:16px; }
+    .button-group { justify-content:center; }
+}
+

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{%block title %}Accueil - My Website{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 style="color: #0eaa16; margin-bottom: 20px;">Bienvenue sur CircleCash</h1>
+        <p style="color: #333; line-height: 1.6; font-size: 16px;">
+            Bienvenue sur notre plateforme de gestion de tontines. Connectez-vous pour accéder à vos tontines et gérer votre portefeuille.
+        </p>
+    </div>
+{% endblock %}              

@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de la tontine - CircleCash{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+    .tontine-detail {
+        max-width: 900px;
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 20px;
+    }
+
+    .detail-header h1 {
+        color: #0eaa16;
+        margin: 0;
+    }
+
+    .detail-status {
+        background: #d4edda;
+        color: #155724;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 12px;
+    }
+
+    .detail-description {
+        color: #666;
+        font-size: 15px;
+        margin: 15px 0;
+        line-height: 1.5;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .detail-card {
+        background: #f9f9f9;
+        border-left: 4px solid #0eaa16;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .detail-card h3 {
+        color: #0eaa16;
+        font-size: 12px;
+        text-transform: uppercase;
+        margin: 0 0 8px 0;
+    }
+
+    .detail-card p {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .members-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #f0f0f0;
+    }
+
+    .members-section h2 {
+        color: #0eaa16;
+        margin-bottom: 15px;
+    }
+
+    .members-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    .member-item {
+        background: #f9f9f9;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .member-item strong {
+        display: block;
+        color: #0eaa16;
+        margin-bottom: 4px;
+    }
+
+    .member-item small {
+        color: #999;
+        font-size: 11px;
+    }
+
+    .admin-badge {
+        display: inline-block;
+        background: #0eaa16;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        margin-top: 6px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-secondary {
+        flex: 1;
+        background: #f0f0f0;
+        color: #333;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: #e0e0e0;
+    }
+
+    .btn-primary {
+        flex: 1;
+        background: linear-gradient(135deg, #0eaa16 0%, #1db823 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(14, 170, 22, 0.3);
+    }
+
+    .waiting-message {
+        flex:1;
+        background:#fff3cd;
+        border:1px solid #ffc107;
+        color:#856404;
+        padding:12px;
+        border-radius:8px;
+        text-align:center;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="tontine-detail">
+    <div class="detail-header">
+        <h1>{{ tontine.name }}</h1>
+        <span class="detail-status">{{ tontine.statut|upper }}</span>
+    </div>
+
+    {% if tontine.description %}
+        <p class="detail-description">{{ tontine.description }}</p>
+    {% endif %}
+
+    <div class="detail-grid">
+        <div class="detail-card">
+            <h3>Montant par tour</h3>
+            <p>{{ tontine.amount }} XOF</p>
+        </div>
+        <div class="detail-card">
+            <h3>Fréquence</h3>
+            <p>{{ tontine.frequency }}</p>
+        </div>
+        <div class="detail-card">
+            <h3>Type de rotation</h3>
+            <p>
+                {% if tontine.rotation_type == 1 %}
+                    Aléatoire
+                {% elif tontine.rotation_type == 2 %}
+                    Ordre d'adhésion
+                {% elif tontine.rotation_type == 3 %}
+                    Ordre alphabétique
+                {% else %}
+                    Autre
+                {% endif %}
+            </p>
+        </div>
+        <div class="detail-card">
+            <h3>Membres approuvés</h3>
+            <p>{{ tontine.members|selectattr('is_approved')|list|length }} / {{ tontine.members_limit }}</p>
+        </div>
+    </div>
+
+    <div class="members-section">
+        <h2>👥 Membres approuvés</h2>
+        {% set approved_members = tontine.members|selectattr('is_approved')|list %}
+        {% if approved_members %}
+            <div class="members-list">
+                {% for membership in approved_members %}
+                    <div class="member-item">
+                        <strong>{{ membership.user.username }}</strong>
+                        <small>Depuis {{ membership.joined_at.strftime('%d/%m/%Y') }}</small>
+                        {% if membership.user_id == tontine.admin_id %}
+                            <span class="admin-badge">Admin</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucun membre approuvé pour le moment.</p>
+        {% endif %}
+    </div>
+
+    <div class="action-buttons">
+        <a href="{{ url_for('tontines.list_all') }}" class="btn-secondary">Retour à la liste</a>
+        {% if is_member %}
+            {% if member_status and not member_status.is_approved %}
+            <div class="waiting-message">
+                ⏳ <strong>Votre demande est en attente d'approbation</strong>
+            </div>
+            {% else %}
+            <form method="post" action="{{ url_for('tontines.leave_tontine', tontine_id=tontine.id) }}" style="flex:1;">
+                <button type="submit" class="btn-secondary" onclick="return confirm('Quitter cette tontine ?');">Quitter</button>
+            </form>
+            {% endif %}
+        {% elif session.get('user_id') %}
+            {% set approved_count = tontine.members|selectattr('is_approved')|list|length %}
+            {% if approved_count < tontine.members_limit %}
+            <form method="post" action="{{ url_for('tontines.join_tontine', tontine_id=tontine.id) }}" style="flex:1;">
+                <button type="submit" class="btn-primary">Rejoindre (demande)</button>
+            </form>
+            {% else %}
+            <div class="waiting-message">
+                Cette tontine est pleine.
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

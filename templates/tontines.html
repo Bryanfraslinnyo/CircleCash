@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Créer une Tontine - CircleCash{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="tontine-container">
+
+    <!-- HEADER -->
+    <div class="tontine-header">
+        <h1>💰 Créer une Tontine</h1>
+        <p>Remplissez les 3 étapes pour finaliser la création</p>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-labels">
+        <span>Étape 1</span>
+        <span>Étape 2</span>
+        <span>Étape 3</span>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-step {% if step=='1' %}active{% elif step in ['2','3'] %}completed{% endif %}"></div>
+        <div class="progress-step {% if step=='2' %}active{% elif step=='3' %}completed{% endif %}"></div>
+        <div class="progress-step {% if step=='3' %}active{% endif %}"></div>
+    </div>
+
+    <!-- FORM -->
+    <form class="tontine-form" method="post">
+        <input type="hidden" id="stepInput" name="step" value="{{ step }}">
+
+        <!-- STEP 1 -->
+        <div class="form-section {% if step=='1' %}active{% endif %}">
+            <h2>📋 Informations de base</h2>
+
+            <div class="form-group">
+                <label>Nom de la tontine *</label>
+                <input type="text" name="name" value="{{ name or '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description">{{ description or '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="form-section {% if step=='2' %}active{% endif %}">
+            <h2>💵 Montant et fréquence</h2>
+
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="description" value="{{ description }}">
+
+            <div class="form-group">
+                <label>Montant par tour (XOF)</label>
+                <input type="number" name="amount" value="{{ amount or '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fréquence *</label>
+                <select name="frequency" required>
+                    <option value="">-- Choisissez --</option>
+                    <option value="hebdomadaire" {% if frequency=='hebdomadaire' %}selected{% endif %}>Hebdomadaire</option>
+                    <option value="bimensuel" {% if frequency=='bimensuel' %}selected{% endif %}>Bimensuel</option>
+                    <option value="mensuel" {% if frequency=='mensuel' %}selected{% endif %}>Mensuel</option>
+                    <option value="trimestriel" {% if frequency=='trimestriel' %}selected{% endif %}>Trimestriel</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="form-section {% if step=='3' %}active{% endif %}">
+            <h2>⚙️ Paramètres avancés</h2>
+
+            <!-- Hidden -->
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="description" value="{{ description }}">
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="frequency" value="{{ frequency }}">
+
+
+            <div class="form-group">
+                <label>Type de rotation *</label>
+                <select name="rotation_type" required>
+                    <option value="1" {% if rotation_type=='1' %}selected{% endif %}>Aléatoire</option>
+                    <option value="2" {% if rotation_type=='2' %}selected{% endif %}>Ordre d'adhésion</option>
+                    <option value="3" {% if rotation_type=='3' %}selected{% endif %}>Ordre alphabétique</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Limite de membres *</label>
+                <input type="number" min="2" name="members_limit" value="{{ members_limit or '' }}" required>
+            </div>
+
+            <div class="tontine-summary">
+                <h3>📝 Résumé</h3>
+
+                <div class="summary-item">
+                    <span class="summary-label">Nom</span>
+                    <span class="summary-value">{{ name }}</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Montant</span>
+                    <span class="summary-value">{{ amount }} XOF</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Fréquence</span>
+                    <span class="summary-value">{{ frequency }}</span>
+                </div>
+
+                <div class="summary-item">
+                    <span class="summary-label">Limite</span>
+                    <span class="summary-value">{{ members_limit }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="button-group">
+            {% if step=='1' %}
+                <button type="button" class="btn-next" onclick="goToStep(2)">Suivant →</button>
+
+            {% elif step=='2' %}
+                <button type="button" class="btn-prev" onclick="goToStep(1)">← Précédent</button>
+                <button type="button" class="btn-next" onclick="goToStep(3)">Suivant →</button>
+
+            {% elif step=='3' %}
+                <button type="button" class="btn-prev" onclick="goToStep(2)">← Précédent</button>
+                <button type="submit" class="btn-submit">✓ Créer la Tontine</button>
+            {% endif %}
+        </div>
+
+    </form>
+</div>
+
+<script>
+function goToStep(step) {
+    document.getElementById("stepInput").value = step;
+    document.querySelector(".tontine-form").submit();
+}
+</script>
+
+{% endblock %}

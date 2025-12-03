@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord - CircleCash{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="dashboard-wrapper">
+    <aside class="sidebar card">
+        <div class="profile-compact">
+            {% if user.profile_image %}
+                <img src="/{{ user.profile_image }}" alt="Photo">
+            {% else %}
+                <div class="avatar-placeholder" style="width:88px;height:88px;border-radius:50%;background:#f0f0f0;display:inline-flex;align-items:center;justify-content:center;font-size:36px;color:#ddd;">👤</div>
+            {% endif %}
+            <h3 style="color:#0eaa16;margin:8px 0 2px;">{{ user.username }}</h3>
+            <p style="color:#666;margin:0;font-size:14px;">{{ user.email or '' }}</p>
+            <p style="color:#666;margin:6px 0 0;font-size:13px;">{{ user.phone or '' }}</p>
+
+            <div class="quick-actions">
+                <a href="{{ url_for('tontines.tontine') }}" class="btn-next">Créer une tontine</a>
+                <a href="{{ url_for('tontines.my_memberships') }}" class="btn-prev">Mes tontines</a>
+                <a href="{{ url_for('tontines.list_all') }}" class="btn-prev">Toutes les tontines</a>
+                <a href="#" onclick="openProfileModal(); return false;" class="btn-prev">Modifier profil</a>
+                <a href="{{ url_for('connexion.logout') }}" class="btn-danger">Se déconnecter</a>
+            </div>
+        </div>
+    </aside>
+
+    <section class="content-area">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <h2 style="color:#0eaa16;margin:0;">Mes tontines</h2>
+            <a href="{{ url_for('tontines.tontine') }}" class="btn-next">Nouvelle tontine</a>
+        </div>
+
+        {% if tontines %}
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                {% for t in tontines %}
+                    <div class="card tontine-row">
+                        <div style="flex:1;min-width:0;">
+                            <h3 style="margin:0 0 6px 0;color:#333;">{{ t.name }}</h3>
+                            <p class="tontine-meta">{{ t.description or '—' }}</p>
+                            <p class="tontine-meta" style="margin-top:8px;color:#0eaa16;font-weight:700;">Montant: {{ t.amount }} • {{ t.frequency }}</p>
+                            {% if pending_counts.get(t.id, 0) > 0 %}
+                                <div style="margin-top:8px;"><span class="badge">⚠️ {{ pending_counts.get(t.id, 0) }} en attente</span></div>
+                            {% endif %}
+                        </div>
+
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <a href="{{ url_for('tontines.manage_tontine', tontine_id=t.id) }}" class="btn-next">Gérer</a>
+                            <a href="{{ url_for('tontines.tontine') }}?edit={{ t.id }}" class="btn-prev">Modifier</a>
+                            <form method="post" action="{{ url_for('tableaudebord.delete_tontine', tontine_id=t.id) }}" onsubmit="return confirm('Supprimer cette tontine ?');">
+                                <button type="submit" class="btn-danger" style="border-radius:8px;padding:8px 12px;border:none;">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card">
+                <p>Aucune tontine créée pour le moment. Créez votre première tontine !</p>
+                <a href="{{ url_for('tontines.tontine') }}" class="btn-next">Créer une tontine</a>
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

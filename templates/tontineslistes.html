@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Toutes les tontines - CircleCash{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% endblock %}
+
+{% block body %}
+<div class="container" style="max-width: 1200px;">
+    <div class="header-actions">
+        <h1>🏆 Toutes les tontines</h1>
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('tontines.tontine') }}">+ Créer une tontine</a>
+        {% endif %}
+    </div>
+
+    {% if tontines %}
+        <div class="tontines-list">
+            {% for tontine in tontines %}
+                <div class="tontine-card">
+                    <h3>{{ tontine.name }}</h3>
+                    <p>{{ tontine.description or 'Pas de description' }}</p>
+                    
+                    <div class="tontine-info">
+                        <div class="info-badge">💰 {{ tontine.amount }} XOF</div>
+                        <div class="info-badge">📅 {{ tontine.frequency }}</div>
+                        <div class="info-badge">👥 {{ tontine.members|length }} / {{ tontine.members_limit }}</div>
+                    </div>
+
+                    <div class="tontine-admin">
+                        Créée par: <strong>{{ tontine.admin.username }}</strong>
+                    </div>
+
+                    {% if session.get('user_id') %}
+                        <div class="tontine-actions">
+                            {% set is_member = current_user in tontine.members|map(attribute='user') if current_user else false %}
+                            {% if is_member %}
+                                <a href="{{ url_for('tontines.view_tontine', tontine_id=tontine.id) }}" class="btn-view">Voir détails</a>
+                            {% else %}
+                                <form method="post" action="{{ url_for('tontines.join_tontine', tontine_id=tontine.id) }}" style="flex:1;">
+                                    <button type="submit" class="btn-join" {% if tontine.members|length >= tontine.members_limit %}disabled{% endif %}>
+                                        {% if tontine.members|length >= tontine.members_limit %}Pleine{% else %}Rejoindre{% endif %}
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <p style="text-align:center;color:#999;margin-top:12px;font-size:12px;">
+                            <a href="{{ url_for('connexion.se_connecter') }}" style="color:#0eaa16;">Connectez-vous</a> pour rejoindre
+                        </p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h2>Aucune tontine disponible</h2>
+            <p>Créez votre première tontine pour commencer</p>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('tontines.tontine') }}" class="btn-next" style="display:inline-block;margin-top:15px;">Créer une tontine</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

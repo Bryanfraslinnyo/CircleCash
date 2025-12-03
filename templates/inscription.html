@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription - My Website{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 style="color: #0eaa16; margin-bottom: 25px; text-align: center; font-size: 24px;">Créer un compte</h1>
+    
+    <form action="{{ url_for('inscription.sinscrire') }}" method="post" enctype="multipart/form-data" style="max-width: 500px; margin: 0 auto;">
+        
+        <!-- Section Photo de Profil -->
+        <div class="profile-photo-section">
+            <div class="profile-photo-preview" id="profilePhotoPreview">
+                📷
+            </div>
+            <input type="file" name="profile_photo" id="profilePhotoInput" class="profile-photo-input" accept="image/*">
+            <label for="profilePhotoInput" class="profile-photo-label">Ajouter une photo</label>
+        </div>
+
+        <div class="form-group">    
+            <label for="username">NOM :</label>
+            <input type="text" name="username" id="username" placeholder="Votre nom..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">EMAIL :</label>
+            <input type="email" name="email" id="email" placeholder="exemple@mail.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">TÉLÉPHONE :</label>
+            <input type="text" name="phone" id="phone" placeholder="6*******" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">MOT DE PASSE :</label>
+            <input type="password" name="password" id="password" placeholder="Mot de passe..." required>
+        </div>
+        
+        <button type="submit" class="btn-submit">S'inscrire</button>
+
+    </form>
+</div>
+
+<script>
+    // Aperçu de la photo de profil
+    const photoInput = document.getElementById('profilePhotoInput');
+    const photoPreview = document.getElementById('profilePhotoPreview');
+    
+    photoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                photoPreview.innerHTML = '<img src="' + event.target.result + '" alt="Photo de profil">';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}
