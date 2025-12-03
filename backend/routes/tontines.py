@@ -3,7 +3,6 @@ from models import db, Tontines, User, Tontines_members, Rotations
 from sqlalchemy.exc import IntegrityError
 import random
 from datetime import datetime
-import numpy as np
 
 tontines = Blueprint('tontines', __name__, template_folder='../../templates')
 

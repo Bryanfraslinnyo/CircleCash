@@ -25,7 +25,15 @@ def dashboard():
     for t in tontines:
         pending_counts[t.id] = db.session.query(Tontines_members).filter_by(tontine_id=t.id, is_approved=False).count()
 
-    return render_template('tableaudebord.html', user=user, tontines=tontines, pending_counts=pending_counts)
+    # Calculer le total des tontines auxquelles appartient l'utilisateur.
+    # On inclut les tontines où il est admin ainsi que celles où il est membre approuvé,
+    # en évitant les doublons.
+    admin_ids = [t.id for t in tontines]
+    member_rows = db.session.query(Tontines_members.tontine_id).filter_by(user_id=user_id, is_approved=True).all()
+    member_ids = [r[0] for r in member_rows]
+    total_tontines = len(set(admin_ids + member_ids))
+
+    return render_template('tableaudebord.html', user=user, tontines=tontines, pending_counts=pending_counts, total_tontines=total_tontines)
 
 
 @tableaudebord.route('/tableaudebord/delete/<int:tontine_id>', methods=['POST'])
